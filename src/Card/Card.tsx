@@ -1,3 +1,4 @@
+import { useEffect, memo } from 'react';
 import { styled } from '@mui/system';
 
 const CardContent = styled('div')(({ flipped }: { flipped : boolean}) => ({
@@ -25,6 +26,7 @@ const CardFace = styled('div')({
 
 const CardFront = styled(CardFace)({
   backgroundColor: '#ff6f61',
+  cursor: 'pointer'
 });
 
 const CardBack = styled(CardFace)({
@@ -34,20 +36,24 @@ const CardBack = styled(CardFace)({
 
 
 type CardInfo = {
+  id: number
   card: string
   isFinish: boolean,
   isFlipped: boolean,
-  openCardClick: (card: string) => void
+  openCardClick: ({id, card }: { id: number, card: string }) => void
 }
 
-const Card = ({ card, isFinish, isFlipped, openCardClick }: CardInfo) => {
-  console.log('card', card)
+const Card = ({ id, card, isFinish, isFlipped, openCardClick }: CardInfo) => {
+  useEffect(() => {
+  }, [])
+
+
   return (
-    <CardContent onClick={() => openCardClick(card)} flipped={isFlipped}>
+    <CardContent onClick={() => openCardClick({ id, card })} flipped={isFlipped}>
       <CardFront>Default</CardFront>
       <CardBack>{card}</CardBack>
     </CardContent>
   )
 }
 
-export default Card
+export default memo(Card)
