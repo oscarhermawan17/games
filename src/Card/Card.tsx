@@ -1,4 +1,3 @@
-import { useState } from 'react';
 import { styled } from '@mui/system';
 
 const CardContent = styled('div')(({ flipped }: { flipped : boolean}) => ({
@@ -15,6 +14,7 @@ const CardFace = styled('div')({
   position: 'absolute',
   width: '100%',
   height: '100%',
+  backfaceVisibility: 'hidden',
   display: 'flex',
   justifyContent: 'center',
   alignItems: 'center',
@@ -32,13 +32,20 @@ const CardBack = styled(CardFace)({
   transform: 'rotateY(180deg)',
 });
 
-const Card = ({ data }: { data: number}) => {
-  const [flipped, setFlipped] = useState(false);
 
+type CardInfo = {
+  card: string
+  isFinish: boolean,
+  isFlipped: boolean,
+  openCardClick: (card: string) => void
+}
+
+const Card = ({ card, isFinish, isFlipped, openCardClick }: CardInfo) => {
+  console.log('card', card)
   return (
-    <CardContent onClick={() => setFlipped(!flipped)} flipped={flipped}>
-      <CardFront>{data}</CardFront>
-      <CardBack>belakang</CardBack>
+    <CardContent onClick={() => openCardClick(card)} flipped={isFlipped}>
+      <CardFront>Default</CardFront>
+      <CardBack>{card}</CardBack>
     </CardContent>
   )
 }

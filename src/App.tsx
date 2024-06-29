@@ -1,56 +1,64 @@
-import React, { useState } from 'react';
-import { Box } from '@mui/material';
-import { styled } from '@mui/system';
 
-const CardContainer = styled(Box)({
-  perspective: '1000px',
-});
+import { Container } from '@mui/material';
+import Grid from '@mui/system/Unstable_Grid';
 
-const Card = styled(Box)(({ flipped }) => ({
-  width: '200px',
-  height: '300px',
-  position: 'relative',
-  transformStyle: 'preserve-3d',
-  transform: flipped ? 'rotateY(180deg)' : 'rotateY(0deg)',
-  transition: 'transform 0.6s',
-}));
+// import { styles } from './App.ts'
+import Card from './Card/Card'
+import { useState } from 'react';
 
-const CardFace = styled(Box)({
-  position: 'absolute',
-  width: '100%',
-  height: '100%',
-  display: 'flex',
-  justifyContent: 'center',
-  alignItems: 'center',
-  fontSize: '24px',
-  color: '#fff',
-  borderRadius: '10px',
-});
 
-const CardFront = styled(CardFace)({
-  backgroundColor: '#ff6f61',
-});
+const dataStatic = () => {
+  const data: any = {}
+  for(let i=0; i<8; i++) {
+    data[i] = {
+      card: i,
+      isFinish: false,
+      isFlipped: false
+    }
+  }
+  return data;
+}
 
-const CardBack = styled(CardFace)({
-  backgroundColor: '#4caf50',
-  transform: 'rotateY(180deg)',
-});
+type CardInfo = {
+  card: string
+  isFinish: boolean,
+  isFlipped: boolean
+}
 
-const FlipCard = () => {
-  const [flipped, setFlipped] = useState(false);
+function App() {
 
-  const handleFlip = () => {
-    setFlipped(!flipped);
-  };
+  const [listOfCard, setListOfCard] = useState(() => dataStatic())
+  
+  const openCard = (card: string) => {
+    setListOfCard((prevState) => (
+      {
+        ...prevState,
+        [card]: {
+          card: card,
+          isFinish: false,
+          isFlipped: true
+        }
+      }))
+  }
 
   return (
-    <CardContainer onClick={handleFlip}>
-      <Card flipped={flipped}>
-        <CardFront>Front</CardFront>
-        <CardBack>Back</CardBack>
-      </Card>
-    </CardContainer>
-  );
-};
+    <Container>
+      <Grid container spacing={2}>
+        {
+          Object.keys(listOfCard).map(key => (
+            <Grid xs={1.5} key={key}>
+              <Card
+                card={listOfCard[key].card}
+                isFinish={listOfCard[key].isFinish}
+                isFlipped={listOfCard[key].isFlipped}
+                openCardClick={openCard}
+              />
+            </Grid>
+          ))
+        }  
+      </Grid>
+    </Container>  
+  )
+}
 
-export default FlipCard;
+export default App
