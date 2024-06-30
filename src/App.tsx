@@ -1,10 +1,9 @@
 
 import { Container } from '@mui/material';
 import Grid from '@mui/system/Unstable_Grid';
-
 // import { styles } from './App.ts'
 import Card from './Card/Card'
-import { useState, useCallback, useMemo } from 'react';
+import { useState, useCallback, useRef } from 'react';
 
 
 const dataStatic = () => {
@@ -23,56 +22,55 @@ const dataStatic = () => {
 function App() {
 
   const [listOfCard, setListOfCard] = useState(() => dataStatic())
-  const [tmpValueId, setTmpValueId] = useState(null)
-
-  console.log('luar', tmpValueId)
+  let ref = useRef(null)
+  const setListFunction = (id, flippedStatus, finishStatus = false) => ({
+    [id]: {
+      id: id,
+      card: listOfCard[id].card,
+      isFinish: finishStatus,
+      isFlipped: flippedStatus
+    }
+  })
 
   const openCard = useCallback(({ id, card } : { id: number, card: string}) => {
-    if(tmpValueId === null) {
-      setListOfCard((prevState) => (
-        {
-          ...prevState,
-          [id]: {
-            id: id,
-            card: card,
-            isFinish: false,
-            isFlipped: true
-          }
-        }))
-        setTmpValueId(id)
-    } else if (listOfCard[tmpValueId].card !== listOfCard[id].card) {
-      console.log('ELSE IF')
-      setListOfCard((prevState) => (
-        {
-          ...prevState,
-          [id]: {
-            id: id,
-            card: card,
-            isFinish: false,
-            isFlipped: true
-          }
-        }))
+    if(ref.current === null) {
+      ref.current = id
+      const object = setListFunction(id, true)
+      setListOfCard(prevState => ({
+        ...prevState,
+        ...object
+      }))
+    } else if (listOfCard[ref.current].card !== listOfCard[id].card) {
+      const object = setListFunction(id, true)
+      setListOfCard(prevState => ({
+        ...prevState,
+        ...object
+      }))
       setTimeout(() => {
-        setTmpValueId(null)
+        const currentId = ref.current
+        ref.current = null
+        const object = setListFunction(id, false)
+        const object2 = setListFunction(currentId, false)
         setListOfCard((prevState) => (
           {
             ...prevState,
-            [id]: {
-              id: id,
-              card: card,
-              isFinish: false,
-              isFlipped: false
-            },
-            [tmpValueId]: {
-              id: tmpValueId,
-              card: listOfCard[tmpValueId].card,
-              isFinish: false,
-              isFlipped: false
-            }
+            ...object,
+            ...object2
           }))
-      }, 4000)
-    }   
-  }, [tmpValueId])
+      }, 3000)
+    } else if(listOfCard[ref.current].card === listOfCard[id].card) {
+      const currentId = ref.current
+      ref.current = null
+      const object = setListFunction(id, true, true)
+      const object2 = setListFunction(currentId, true, true)
+      setListOfCard((prevState) => (
+        {
+          ...prevState,
+          ...object,
+          ...object2
+        }))
+    }
+  }, [])
 
   return (
     <Container>
