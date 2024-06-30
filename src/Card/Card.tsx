@@ -45,11 +45,13 @@ type CardInfo = {
 
 const Card = ({ id, card, isFinish, isFlipped, openCardClick }: CardInfo) => {
   useEffect(() => {
+    console.log(isFinish)
   }, [])
 
 
   return (
-    <CardContent onClick={() => openCardClick({ id, card })} flipped={isFlipped}>
+    <CardContent onClick={() => isFlipped ? undefined : openCardClick({ id, card })}
+      flipped={isFlipped}>
       <CardFront>Default</CardFront>
       <CardBack>{card}</CardBack>
     </CardContent>
