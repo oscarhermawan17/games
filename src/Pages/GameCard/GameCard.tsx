@@ -1,12 +1,13 @@
 import { useEffect } from "react"
 import { Container } from "@mui/material"
-import Modal from '@mui/material/Modal';
-import Button from '@mui/material/Button';
-import Box from '@mui/material/Box';
+import Modal from "@mui/material/Modal"
+import Button from "@mui/material/Button"
+import Box from "@mui/material/Box"
 import Grid from "@mui/system/Unstable_Grid"
-import Card from "./Card/Card"
-import imageWin from '../public/MyWife.jpeg'
+import Card from "../../Card/Card"
+import imageWin from "../../assets/MyWife.jpeg"
 import { useState, useCallback, useRef } from "react"
+// import useMediaQuery from "@mui/material/useMediaQuery"
 
 type Card = {
   id: number
@@ -21,7 +22,7 @@ type CardCollection = {
 const dataStatic = () => {
   const cardDataStatic = [
     1, 1, 2, 2, 3, 3, 4, 4, 5, 5, 6, 6, 7, 7, 8, 8, 9, 9, 10, 10, 11, 11, 12,
-    12, 13, 13, 14, 14, 15, 15, 16, 16
+    12, 13, 13, 14, 14, 15, 15, 16, 16,
   ]
   const data: CardCollection = {}
   let i: number = 0
@@ -38,12 +39,11 @@ const dataStatic = () => {
   return data
 }
 
-
-
-function App() {
+function GameCard() {
   const [listOfCard, setListOfCard] = useState(() => dataStatic())
   const [isGameOver, setIsGameOver] = useState(false)
   const [modalGame, setModalGame] = useState(false)
+  const [widthBrowser, setWidthBrowser] = useState(window.innerWidth)
 
   const ref = useRef<null | number>(null)
   const hold = useRef<boolean>(false)
@@ -55,6 +55,19 @@ function App() {
       setTimeout(() => setModalGame(true), 1500)
     }
   }, [isGameOver])
+
+  useEffect(() => {
+    const handleResize = () => {
+      setWidthBrowser(window.innerWidth)
+    }
+
+    window.addEventListener("resize", handleResize)
+
+    // Cleanup event listener on component unmount
+    return () => {
+      window.removeEventListener("resize", handleResize)
+    }
+  }, [])
 
   const setListFunction = (id: number, flippedStatus: boolean) => ({
     [id]: {
@@ -122,8 +135,9 @@ function App() {
   }, [])
 
   return (
-    <Container sx={{marginTop: '180px' }}>
-      <Grid container spacing={2} >
+    <Container sx={{ marginTop: "180px" }}>
+      {widthBrowser} px
+      <Grid container spacing={2}>
         {Object.keys(listOfCard).map((key) => (
           <Grid xs={1.5} key={key}>
             <Card
@@ -135,51 +149,60 @@ function App() {
           </Grid>
         ))}
       </Grid>
-
-      { /** Modal confirmation, game end or win */}
+      {/** Modal confirmation, game end or win */}
       <Modal
         open={modalGame}
         onClose={() => setModalGame(false)}
         aria-labelledby="modal-modal-title"
         aria-describedby="modal-modal-description"
       >
-        <Box 
-          sx={{ 
-            display: 'flex',
-            justifyContent: 'center',
-            alignItems: 'center',
-            height: '100%',
+        <Box
+          sx={{
+            display: "flex",
+            justifyContent: "center",
+            alignItems: "center",
+            height: "100%",
           }}
         >
-          <Box sx={{ 
-            margin: '0 auto',
-            width: 300,
-            padding: '8px', 
-            backgroundColor: 'white',
-          }}>
+          <Box
+            sx={{
+              margin: "0 auto",
+              width: 300,
+              padding: "8px",
+              backgroundColor: "white",
+            }}
+          >
             <img
               src={imageWin}
               style={{
-                maxWidth:`100%`
+                maxWidth: `100%`,
               }}
-              alt={'MyWife'}
+              alt={"MyWife"}
               loading="lazy"
             />
-            <Box sx={{
-              marginTop: '20px',
-              textAlign: 'center'
-            }}>
-              <p style={{ fontSize: 22}}>You win with total {totalOpenCard.current} clicks.</p>
+            <Box
+              sx={{
+                marginTop: "20px",
+                textAlign: "center",
+              }}
+            >
+              <p style={{ fontSize: 22 }}>
+                You win with total {totalOpenCard.current} clicks.
+              </p>
               <p>This game is for My Wife (@lestaridewi)</p>
-              <Button variant="contained" color="success" onClick={() => location.reload()}>Tari CANTIK? YA !!</Button>
+              <Button
+                variant="contained"
+                color="success"
+                onClick={() => location.reload()}
+              >
+                Tari CANTIK? YA !!
+              </Button>
             </Box>
+          </Box>
         </Box>
-
-        </Box>
-        
       </Modal>
     </Container>
   )
 }
 
-export default App
+export default GameCard
