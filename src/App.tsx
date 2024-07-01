@@ -1,7 +1,11 @@
 import { useEffect } from "react"
 import { Container } from "@mui/material"
+import Modal from '@mui/material/Modal';
+import Button from '@mui/material/Button';
+import Box from '@mui/material/Box';
 import Grid from "@mui/system/Unstable_Grid"
 import Card from "./Card/Card"
+import imageWin from '../public/MyWife.jpeg'
 import { useState, useCallback, useRef } from "react"
 
 type Card = {
@@ -39,6 +43,8 @@ const dataStatic = () => {
 function App() {
   const [listOfCard, setListOfCard] = useState(() => dataStatic())
   const [isGameOver, setIsGameOver] = useState(false)
+  const [modalGame, setModalGame] = useState(false)
+
   const ref = useRef<null | number>(null)
   const hold = useRef<boolean>(false)
   const totalSolveCard = useRef<number>(0)
@@ -46,10 +52,7 @@ function App() {
 
   useEffect(() => {
     if (isGameOver) {
-      setTimeout(
-        () => alert(`You win with total ${totalOpenCard.current} clicks. \n\n This game for My Wife (@lestaridewi)`),
-        2000
-      )
+      setTimeout(() => setModalGame(true), 1500)
     }
   }, [isGameOver])
 
@@ -132,6 +135,49 @@ function App() {
           </Grid>
         ))}
       </Grid>
+
+      { /** Modal confirmation, game end or win */}
+      <Modal
+        open={modalGame}
+        onClose={() => setModalGame(false)}
+        aria-labelledby="modal-modal-title"
+        aria-describedby="modal-modal-description"
+      >
+        <Box 
+          sx={{ 
+            display: 'flex',
+            justifyContent: 'center',
+            alignItems: 'center',
+            height: '100%',
+          }}
+        >
+          <Box sx={{ 
+            margin: '0 auto',
+            width: 300,
+            padding: '8px', 
+            backgroundColor: 'white',
+          }}>
+            <img
+              src={imageWin}
+              style={{
+                maxWidth:`100%`
+              }}
+              alt={'MyWife'}
+              loading="lazy"
+            />
+            <Box sx={{
+              marginTop: '20px',
+              textAlign: 'center'
+            }}>
+              <p style={{ fontSize: 22}}>You win with total {totalOpenCard.current} clicks.</p>
+              <p>This game is for My Wife (@lestaridewi)</p>
+              <Button variant="contained" color="success" onClick={() => location.reload()}>Tari CANTIK? YA !!</Button>
+            </Box>
+        </Box>
+
+        </Box>
+        
+      </Modal>
     </Container>
   )
 }
