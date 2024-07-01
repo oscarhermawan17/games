@@ -1,18 +1,13 @@
 import { createBrowserRouter } from "react-router-dom"
 
-// import Home from "../Pages/Home"
+import Home from "../Pages/Home"
 import GameCard from "../Pages/GameCard"
 import NotFoundPage from "../Pages/NotFoundPage/NotFoundPage"
 
 const router = createBrowserRouter([
-  // {
-  //   path: "/",
-  //   element: <Home />,
-  //   errorElement: <NotFoundPage />,
-  // },
   {
     path: "/",
-    element: <GameCard />,
+    element: <Home />,
     errorElement: <NotFoundPage />,
   },
   {
