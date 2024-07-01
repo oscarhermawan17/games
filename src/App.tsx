@@ -17,7 +17,7 @@ type CardCollection = {
 const dataStatic = () => {
   const cardDataStatic = [
     1, 1, 2, 2, 3, 3, 4, 4, 5, 5, 6, 6, 7, 7, 8, 8, 9, 9, 10, 10, 11, 11, 12,
-    12, 13, 13, 14, 14, 15, 15, 16, 16, 17, 17, 18, 18, 19, 19, 20, 20,
+    12, 13, 13, 14, 14, 15, 15, 16, 16
   ]
   const data: CardCollection = {}
   let i: number = 0
@@ -47,7 +47,7 @@ function App() {
   useEffect(() => {
     if (isGameOver) {
       setTimeout(
-        () => alert(`you win with total click = ${totalOpenCard.current}`),
+        () => alert(`You win with total ${totalOpenCard.current} clicks. \n\n This game for My Wife (@lestaridewi)`),
         2000
       )
     }
@@ -119,8 +119,8 @@ function App() {
   }, [])
 
   return (
-    <Container>
-      <Grid container spacing={2}>
+    <Container sx={{marginTop: '180px' }}>
+      <Grid container spacing={2} >
         {Object.keys(listOfCard).map((key) => (
           <Grid xs={1.5} key={key}>
             <Card
