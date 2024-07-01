@@ -16,6 +16,11 @@ const router = createBrowserRouter([
     errorElement: <NotFoundPage />,
   },
   {
+    path: "/games",
+    element: <GameCard />,
+    errorElement: <NotFoundPage />,
+  },
+  {
     path: "*",
     element: <NotFoundPage />,
   },
