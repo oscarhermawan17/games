@@ -38,11 +38,11 @@ const CardBack = styled(CardFace)({
 const Card = ({ id, card, isFlipped, openCardClick }: CardProps) => {
   return (
     <CardContent
-      onClick={() => (isFlipped ? undefined : openCardClick({ id, card }))}
+      onClick={() => (isFlipped ? undefined : openCardClick(id))}
       flipped={isFlipped}
     >
       <CardFront></CardFront>
-      <CardBack>{card}</CardBack>s
+      <CardBack>{card}</CardBack>
     </CardContent>
   )
 }

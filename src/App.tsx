@@ -5,14 +5,22 @@ import Card from "./Card/Card"
 import { useState, useCallback, useRef } from "react"
 
 const dataStatic = () => {
+  const cardDataStatic = [
+    1, 1, 2, 2, 3, 3, 4, 4, 5, 5, 6, 6, 7, 7, 8, 8, 9, 9, 10, 10, 11, 11, 12,
+    12, 13, 13, 14, 14, 15, 15, 16, 16, 17, 17, 18, 18, 19, 19, 20, 20,
+  ]
   const data: any = {}
-  for (let i = 0; i < 8; i++) {
+  let i: number = 0
+  while (cardDataStatic.length > 0) {
+    const getIndexRandom = Math.floor(Math.random() * cardDataStatic.length)
     data[i] = {
       id: i,
-      card: i % 2 == 0 ? i : i - 1,
+      card: cardDataStatic[getIndexRandom],
       isFinish: false,
       isFlipped: false,
     }
+    i++
+    cardDataStatic.splice(getIndexRandom, 1)
   }
   return data
 }
@@ -57,12 +65,11 @@ function App() {
     }
   }
 
-  const openCard = useCallback(({ id, card }: { id: number; card: string }) => {
+  const openCard = useCallback((id: number) => {
     if (isGameOver) {
       return
     }
 
-    console.log("card", card)
     /** Open First Card  (After macthed also) */
     if (ref.current === null) {
       ref.current = id as number
