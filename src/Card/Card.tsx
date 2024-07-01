@@ -31,7 +31,8 @@ const CardFront = styled(CardFace)({
 })
 
 const CardBack = styled(CardFace)({
-  backgroundColor: "#4caf50",
+  backgroundColor: "#ccc",
+  overflow: "hidden",
   transform: "rotateY(180deg)",
 })
 
@@ -42,7 +43,17 @@ const Card = ({ id, card, isFlipped, openCardClick }: CardProps) => {
       flipped={isFlipped}
     >
       <CardFront></CardFront>
-      <CardBack>{card}</CardBack>
+      <CardBack>
+        <img
+          src={card}
+          style={{
+            minWidth: "100%",
+            minHeight: "100%",
+          }}
+          alt={"image"}
+          loading="lazy"
+        />
+      </CardBack>
     </CardContent>
   )
 }

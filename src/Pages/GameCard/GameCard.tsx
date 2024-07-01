@@ -4,40 +4,12 @@ import Modal from "@mui/material/Modal"
 import Button from "@mui/material/Button"
 import Box from "@mui/material/Box"
 import Grid from "@mui/system/Unstable_Grid"
+import { useState, useCallback, useRef } from "react"
+
 import Card from "../../Card/Card"
 import imageWin from "../../assets/MyWife.jpeg"
-import { useState, useCallback, useRef } from "react"
-// import useMediaQuery from "@mui/material/useMediaQuery"
-
-type Card = {
-  id: number
-  card: string
-  isFlipped: boolean
-}
-
-type CardCollection = {
-  [key: string]: Card
-}
-
-const dataStatic = () => {
-  const cardDataStatic = [
-    1, 1, 2, 2, 3, 3, 4, 4, 5, 5, 6, 6, 7, 7, 8, 8, 9, 9, 10, 10, 11, 11, 12,
-    12, 13, 13, 14, 14, 15, 15, 16, 16,
-  ]
-  const data: CardCollection = {}
-  let i: number = 0
-  while (cardDataStatic.length > 0) {
-    const getIndexRandom = Math.floor(Math.random() * cardDataStatic.length)
-    data[i] = {
-      id: i,
-      card: cardDataStatic[getIndexRandom].toString(),
-      isFlipped: false,
-    }
-    i++
-    cardDataStatic.splice(getIndexRandom, 1)
-  }
-  return data
-}
+import type { CardCollection } from "./GameCardType"
+import { dataStatic } from "./DataStatic"
 
 function GameCard() {
   const [listOfCard, setListOfCard] = useState(() => dataStatic())
@@ -135,11 +107,11 @@ function GameCard() {
   }, [])
 
   return (
-    <Container sx={{ marginTop: "180px" }}>
-      {widthBrowser} px
+    <Container maxWidth="md" sx={{ marginTop: "80px" }}>
+      {widthBrowser}
       <Grid container spacing={2}>
         {Object.keys(listOfCard).map((key) => (
-          <Grid xs={1.5} key={key}>
+          <Grid xs={2} md={1.2} key={key}>
             <Card
               id={listOfCard[key].id}
               card={listOfCard[key].card}
@@ -195,7 +167,7 @@ function GameCard() {
                 color="success"
                 onClick={() => location.reload()}
               >
-                Tari CANTIK? YA !!
+                OK
               </Button>
             </Box>
           </Box>
