@@ -4,19 +4,28 @@ import Grid from "@mui/system/Unstable_Grid"
 import Card from "./Card/Card"
 import { useState, useCallback, useRef } from "react"
 
+type Card = {
+  id: number
+  card: string
+  isFlipped: boolean
+}
+
+type CardCollection = {
+  [key: string]: Card
+}
+
 const dataStatic = () => {
   const cardDataStatic = [
     1, 1, 2, 2, 3, 3, 4, 4, 5, 5, 6, 6, 7, 7, 8, 8, 9, 9, 10, 10, 11, 11, 12,
     12, 13, 13, 14, 14, 15, 15, 16, 16, 17, 17, 18, 18, 19, 19, 20, 20,
   ]
-  const data: any = {}
+  const data: CardCollection = {}
   let i: number = 0
   while (cardDataStatic.length > 0) {
     const getIndexRandom = Math.floor(Math.random() * cardDataStatic.length)
     data[i] = {
       id: i,
-      card: cardDataStatic[getIndexRandom],
-      isFinish: false,
+      card: cardDataStatic[getIndexRandom].toString(),
       isFlipped: false,
     }
     i++
@@ -25,20 +34,13 @@ const dataStatic = () => {
   return data
 }
 
-type Card = {
-  id: number
-  card: number
-  isFlipped: boolean
-}
 
-interface CardCollection {
-  [key: string]: Card
-}
 
 function App() {
   const [listOfCard, setListOfCard] = useState(() => dataStatic())
   const [isGameOver, setIsGameOver] = useState(false)
   const ref = useRef<null | number>(null)
+  const hold = useRef<boolean>(false)
   const totalSolveCard = useRef<number>(0)
   const totalOpenCard = useRef<number>(0)
 
@@ -66,7 +68,7 @@ function App() {
   }
 
   const openCard = useCallback((id: number) => {
-    if (isGameOver) {
+    if (isGameOver || hold.current) {
       return
     }
 
@@ -80,6 +82,8 @@ function App() {
       }))
       /** Open Second Card, But Not match  */
     } else if (listOfCard[ref.current].card !== listOfCard[id].card) {
+      console.log(hold.current)
+      hold.current = true
       const object = setListFunction(id, true)
       setListOfCard((prevState: CardCollection) => ({
         ...prevState,
@@ -95,6 +99,7 @@ function App() {
           ...object,
           ...object2,
         }))
+        hold.current = false
       }, 2000)
       /** Open Second Card, and matched  */
     } else if (listOfCard[ref.current].card === listOfCard[id].card) {
