@@ -1,5 +1,5 @@
 import { useEffect, useState, useCallback, useRef } from "react"
-import { Container } from "@mui/material"
+import { Container, Typography } from "@mui/material"
 import Modal from "@mui/material/Modal"
 import Button from "@mui/material/Button"
 import Box from "@mui/material/Box"
@@ -14,7 +14,8 @@ function GameCard() {
   const [listOfCard, setListOfCard] = useState(() => dataStatic())
   const [isGameOver, setIsGameOver] = useState(false)
   const [modalGame, setModalGame] = useState(false)
-  const [widthBrowser, setWidthBrowser] = useState(window.innerWidth)
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  const [_widthBrowser, setWidthBrowser] = useState(window.innerWidth)
 
   const ref = useRef<null | number>(null)
   const hold = useRef<boolean>(false)
@@ -106,9 +107,18 @@ function GameCard() {
   }, [])
 
   return (
-    <Container maxWidth="md" sx={{ marginTop: "80px" }}>
-      {widthBrowser}
-      <Grid container spacing={2}>
+    <Container maxWidth="md">
+      <Typography
+        variant="body1"
+        sx={{
+          textAlign: "center",
+          marginTop: 2.5,
+        }}
+      >
+        Memory Game
+      </Typography>
+
+      <Grid container spacing={2} sx={{ marginTop: 6 }}>
         {Object.keys(listOfCard).map((key) => (
           <Grid xs={2} md={1.2} key={key}>
             <Card

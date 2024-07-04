@@ -12,6 +12,11 @@ const router = createBrowserRouter([
   },
   {
     path: "/games",
+    element: <Home />,
+    errorElement: <NotFoundPage />,
+  },
+  {
+    path: "/games/sudoku",
     element: <GameCard />,
     errorElement: <NotFoundPage />,
   },
