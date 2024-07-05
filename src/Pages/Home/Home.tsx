@@ -32,7 +32,9 @@ const Home = () => {
 
   const clickChangeUrl = (index: number) => {
     if (index === 0) {
-      navigate("/games/sudoku")
+      navigate("/games/memory_game")
+    } else if (index === 1) {
+      navigate("/games/sudoku_game")
     } else {
       alert("Sorry. The game is not ready yet")
     }

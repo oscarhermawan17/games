@@ -2,7 +2,8 @@ import { createBrowserRouter } from "react-router-dom"
 
 import Home from "../Pages/Home"
 import GameCard from "../Pages/GameCard"
-import NotFoundPage from "../Pages/NotFoundPage/NotFoundPage"
+import SudokuGame from "../Pages/SudokuGame"
+import NotFoundPage from "../Pages/NotFoundPage"
 
 const router = createBrowserRouter([
   {
@@ -16,8 +17,13 @@ const router = createBrowserRouter([
     errorElement: <NotFoundPage />,
   },
   {
-    path: "/games/sudoku",
+    path: "/games/memory_game",
     element: <GameCard />,
+    errorElement: <NotFoundPage />,
+  },
+  {
+    path: "/games/sudoku_game",
+    element: <SudokuGame />,
     errorElement: <NotFoundPage />,
   },
   {

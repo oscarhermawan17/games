@@ -1,9 +1,10 @@
 import { useEffect, useState, useCallback, useRef } from "react"
-import { Container, Typography } from "@mui/material"
-import Modal from "@mui/material/Modal"
-import Button from "@mui/material/Button"
 import Box from "@mui/material/Box"
+import Button from "@mui/material/Button"
+import Container from "@mui/material/Container"
 import Grid from "@mui/system/Unstable_Grid"
+import Modal from "@mui/material/Modal"
+import Typography from "@mui/material/Typography"
 
 import Card from "../../Card/Card"
 import imageWin from "../../assets/MyWife.jpeg"
