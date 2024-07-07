@@ -1,39 +1,21 @@
-import { useRef, useEffect } from "react"
+import { useState, useRef } from "react"
 import Box from "@mui/material/Box"
 import Button from "@mui/material/Button"
 import Container from "@mui/material/Container"
 import Grid from "@mui/system/Unstable_Grid"
 import Typography from "@mui/material/Typography"
+import LibraryGame from './GameLibrary'
 
-type Row = string[];
+const dataTmp = LibraryGame()
 
-type DataTmp = Row[];
-
-type InputRefs = {
-  [key: string]: HTMLInputElement | null;
-};
-
-const dataTmp = [
-  [5, 3, 0, 0, 7, 0, 0, 0, 0],
-  [6, 0, 0, 1, 9, 5, 0, 0, 0],
-  [0, 9, 8, 0, 0, 0, 0, 6, 0],
-  [8, 0, 0, 0, 6, 0, 0, 0, 3],
-  [4, 0, 0, 8, 0, 3, 0, 0, 1],
-  [7, 0, 0, 0, 2, 0, 0, 0, 6],
-  [0, 6, 0, 0, 0, 0, 2, 8, 0],
-  [0, 0, 0, 4, 1, 9, 0, 0, 5],
-  [0, 0, 0, 0, 8, 0, 0, 7, 9],
-];
-
-function Sudoku() {
+function SudokuGame() {
+  const [dataList, setDataList] = useState(dataTmp);
   const dataRef = useRef({ dataList: dataTmp, inputRefs: {} });
 
   const changeCard = (target, indexRow, indexColom) => {
-    const newDataList = [...dataRef.current.dataList];
-    console.log(Number(target.value))
-    newDataList[indexRow][indexColom] = Number(target.value)
-    console.log(newDataList)
-    dataRef.current.dataList = newDataList;
+    const newDataList = [...dataList];
+    newDataList[indexRow][indexColom] = -1
+    setDataList(newDataList);
   };
 
   const handleClickFocus = (indexRow, indexColom) => {
@@ -42,6 +24,15 @@ function Sudoku() {
       dataRef.current.inputRefs[key].focus();
     }
   };
+
+  const getAnswer = () => {
+    const backTrackingValue = backTracking()
+    if(backTrackingValue) {
+      setDataList([...backTrackingValue])
+    } else {
+      alert('Cant solve this games')
+    }
+  }
 
   const backTracking = () => {
     const emptyPositionList = findEmpty(dataRef.current.dataList);
@@ -78,8 +69,7 @@ function Sudoku() {
         }
       }
     }
-    console.log('Final = ', dataRef.current.dataList)
-    console.log(canFix)
+    return canFix ? dataRef.current.dataList : false
   }
 
   function findPossibleValues(board, row, col) {
@@ -117,10 +107,8 @@ function Sudoku() {
         }
       }
     }
-
     return true;
   }
-
 
   const findEmpty = (board) => {
     const empty = []
@@ -133,11 +121,6 @@ function Sudoku() {
     }
     return empty;
   }
-
-  useEffect(() => {
-    // This effect runs only once, so it doesn't trigger re-renders
-  }, []);
-
 
   return (
     <Container maxWidth="md">
@@ -152,7 +135,7 @@ function Sudoku() {
       </Typography>
 
       <Grid container spacing={1} sx={{ backgroundColor: "black", marginTop: 6 }}>
-        {dataRef.current.dataList.map((dataPerRow, indexRow) => {
+        {dataList.map((dataPerRow, indexRow) => {
           return dataPerRow.map((dataPerColom, indexColom) => {
             const key = `${indexRow}-${indexColom}`;
             return (
@@ -167,8 +150,7 @@ function Sudoku() {
                   }}
                   onClick={() => handleClickFocus(indexRow, indexColom)}
                 >
-                  <input
-                    type="text"
+                  <div
                     style={{
                       width: "100%",
                       border: 'none',
@@ -176,10 +158,10 @@ function Sudoku() {
                       outline: 'none',
                       textAlign: 'center'
                     }}
-                    ref={(el) => (dataRef.current.inputRefs[key] = el)}
-                    defaultValue={dataPerColom}
-                    onChange={(event) => changeCard(event.target, indexRow, indexColom)}
-                  />
+                    onClick={(event) => changeCard(event.target, indexRow, indexColom)}
+                  >
+                    {dataPerColom}
+                  </div>
                 </Box>
               </Grid>
             );
@@ -187,11 +169,11 @@ function Sudoku() {
         })}
       </Grid>
       <Box sx={{ marginTop: 3, textAlign: 'center' }}>
-        <Button variant="contained" onClick={backTracking}>Get Answer</Button> &nbsp;
+        <Button variant="contained" onClick={getAnswer}>Get Answer</Button> &nbsp;
         <Button variant="contained" onClick={() => alert('Still Work In Progress')}>Check</Button>
       </Box>
     </Container>
   )
 }
 
-export default Sudoku;
+export default SudokuGame;

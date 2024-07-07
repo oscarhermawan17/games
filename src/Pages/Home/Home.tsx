@@ -15,7 +15,7 @@ const HoverListItem = styled(ListItem)(({ theme }) => ({
 
 const Home = () => {
   const [selectedIndex, setSelectedIndex] = useState(0)
-  const items = ["Memory Game", "Let me solve your sudoku problem", "Find hat"]
+  const items = ["Memory Game", "Let me solve your sudoku problem", "Mini Tetris"]
   const navigate = useNavigate()
 
   const handleKeyDown = ({ key }: { key: string }) => {
@@ -35,6 +35,8 @@ const Home = () => {
       navigate("/games/memory_game")
     } else if (index === 1) {
       navigate("/games/sudoku_game")
+    } else if (index === 2) {
+      navigate("/games/mini_tetris_game")
     } else {
       alert("Sorry. The game is not ready yet")
     }

@@ -1,1 +1,1 @@
-export { default } from './Sudoku'
+export { default } from './SudokuGame'
