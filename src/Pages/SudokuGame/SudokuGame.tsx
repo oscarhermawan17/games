@@ -3,26 +3,45 @@ import Box from "@mui/material/Box"
 import Button from "@mui/material/Button"
 import Container from "@mui/material/Container"
 import Grid from "@mui/system/Unstable_Grid"
+import Modal from '@mui/material/Modal';
 import Typography from "@mui/material/Typography"
+
 import LibraryGame from './GameLibrary'
+
+const style = {
+  position: 'absolute',
+  top: '50%',
+  left: '50%',
+  transform: 'translate(-50%, -50%)',
+  width: 400,
+  bgcolor: 'black',
+  border: '2px solid #fff',
+  boxShadow: 24,
+};
 
 const dataTmp = LibraryGame()
 
 function SudokuGame() {
   const [dataList, setDataList] = useState(dataTmp);
   const dataRef = useRef({ dataList: dataTmp, inputRefs: {} });
+  const [openModal, setOpenModal] = useState(false)
+  const [posibilitiesOnModal, setPosibilitiesOnModal] = useState([])
+  const coordinate = useRef([])
 
-  const changeCard = (target, indexRow, indexColom) => {
+  const handleClose = () => setOpenModal(false);
+
+  const openFunction = (indexRow, indexColom) => {
+    const setPosibilitiesForModal = findPossibleValues(dataList, indexRow, indexColom)
+    setPosibilitiesOnModal(setPosibilitiesForModal)
+    coordinate.current = [indexRow, indexColom]
+    setOpenModal(true);
+  }
+
+  const changeCard = (value, indexRow, indexColom) => {
     const newDataList = [...dataList];
-    newDataList[indexRow][indexColom] = -1
+    newDataList[indexRow][indexColom] = value
     setDataList(newDataList);
-  };
-
-  const handleClickFocus = (indexRow, indexColom) => {
-    const key = `${indexRow}-${indexColom}`;
-    if (dataRef.current.inputRefs[key]) {
-      dataRef.current.inputRefs[key].focus();
-    }
+    handleClose()
   };
 
   const getAnswer = () => {
@@ -141,15 +160,13 @@ function SudokuGame() {
             return (
               <Grid xs={1.33} md={1.33} key={key}>
                 <Box sx={{
-                    height: 40,
-                    width: '100%',
-                    backgroundColor: "white",
-                    display: "flex",
-                    justifyContent: "center",
-                    alignItems: "center",
-                  }}
-                  onClick={() => handleClickFocus(indexRow, indexColom)}
-                >
+                  height: 40,
+                  width: '100%',
+                  backgroundColor: "white",
+                  display: "flex",
+                  justifyContent: "center",
+                  alignItems: "center",
+                }}>
                   <div
                     style={{
                       width: "100%",
@@ -158,7 +175,7 @@ function SudokuGame() {
                       outline: 'none',
                       textAlign: 'center'
                     }}
-                    onClick={(event) => changeCard(event.target, indexRow, indexColom)}
+                    onClick={() => openFunction(indexRow, indexColom)}
                   >
                     {dataPerColom}
                   </div>
@@ -172,6 +189,46 @@ function SudokuGame() {
         <Button variant="contained" onClick={getAnswer}>Get Answer</Button> &nbsp;
         <Button variant="contained" onClick={() => alert('Still Work In Progress')}>Check</Button>
       </Box>
+
+      <Modal
+        open={openModal}
+        onClose={handleClose}
+        aria-labelledby="modal-modal-title"
+        aria-describedby="modal-modal-description"
+      >
+        <Grid container spacing={2} sx={style}>
+          <Grid xs={12}>
+            <Typography
+              variant="body1"
+              sx={{
+                marginTop: '10px',
+                color: 'white',
+                textAlign: "center",
+              }}
+            >
+              Choose your number
+            </Typography>
+          </Grid>
+
+          {posibilitiesOnModal.map((value => (
+            <Grid xs={4} md={1.33} key={value}>
+              <Box sx={{
+                  height: 40,
+                  width: '100%',
+                  backgroundColor: "white",
+                  display: "flex",
+                  justifyContent: "center",
+                  alignItems: "center",
+                }}
+                onClick={() => changeCard(value, coordinate.current[0], coordinate.current[1])}
+              >
+                {value}
+              </Box>
+            </Grid>
+            
+          )))}
+        </Grid>
+      </Modal>
     </Container>
   )
 }
