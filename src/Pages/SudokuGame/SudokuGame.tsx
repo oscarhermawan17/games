@@ -6,38 +6,29 @@ import Grid from "@mui/system/Unstable_Grid"
 import Modal from '@mui/material/Modal';
 import Typography from "@mui/material/Typography"
 
+import type { Board, PosibilitesValue, StepStack } from "./SudokuGameType"
+import Styles from './SudokuGameStyles'
 import LibraryGame from './GameLibrary'
-
-const style = {
-  position: 'absolute',
-  top: '50%',
-  left: '50%',
-  transform: 'translate(-50%, -50%)',
-  width: 400,
-  bgcolor: 'black',
-  border: '2px solid #fff',
-  boxShadow: 24,
-};
 
 const dataTmp = LibraryGame()
 
 function SudokuGame() {
-  const [dataList, setDataList] = useState(dataTmp);
+  const [dataList, setDataList] = useState<Board>(dataTmp);
   const dataRef = useRef({ dataList: dataTmp, inputRefs: {} });
   const [openModal, setOpenModal] = useState(false)
-  const [posibilitiesOnModal, setPosibilitiesOnModal] = useState([])
-  const coordinate = useRef([])
+  const [posibilitiesOnModal, setPosibilitiesOnModal] = useState<number[]>([])
+  const coordinate = useRef<[number, number]>([0,0])
 
   const handleClose = () => setOpenModal(false);
 
-  const openFunction = (indexRow, indexColom) => {
+  const openFunction = (indexRow: number, indexColom: number) => {
     const setPosibilitiesForModal = findPossibleValues(dataList, indexRow, indexColom)
     setPosibilitiesOnModal(setPosibilitiesForModal)
     coordinate.current = [indexRow, indexColom]
     setOpenModal(true);
   }
 
-  const changeCard = (value, indexRow, indexColom) => {
+  const changeCard = (value: number, indexRow: number, indexColom: number) => {
     const newDataList = [...dataList];
     newDataList[indexRow][indexColom] = value
     setDataList(newDataList);
@@ -55,8 +46,8 @@ function SudokuGame() {
 
   const backTracking = () => {
     const emptyPositionList = findEmpty(dataRef.current.dataList);
-    let posibilitesValue = {}
-    let stepStack = []
+    let posibilitesValue: PosibilitesValue = {}
+    let stepStack: StepStack = []
     let canFix = true
 
     outerLoop: for(let row = 0; row < 9; row++) {
@@ -80,10 +71,10 @@ function SudokuGame() {
             const lastStack = stepStack.length -1
             row = stepStack[lastStack][0]
             col = stepStack[lastStack][1] -1
-            stepStack = stepStack.slice(0,-1)
+            stepStack = stepStack.slice(0,-1) as StepStack
           } else {
             dataRef.current.dataList[row][col] = valueNow
-            stepStack = [...stepStack, [row, col]]
+            stepStack = [...stepStack, [row, col]] as StepStack
           }
         }
       }
@@ -91,8 +82,8 @@ function SudokuGame() {
     return canFix ? dataRef.current.dataList : false
   }
 
-  function findPossibleValues(board, row, col) {
-    let possibleValues = [];
+  function findPossibleValues(board: Board, row: number, col: number) {
+    const possibleValues = [];
     for (let num = 1; num <= 9; num++) {
       if (isValid(board, num, row, col)) {
         possibleValues.push(num);
@@ -101,7 +92,7 @@ function SudokuGame() {
     return possibleValues;
   }
 
-  function isValid(board, num, row, col) {
+  function isValid(board: Board, num: number, row: number, col: number) {
     // Periksa baris
     for (let x = 0; x < 9; x++) {
       if (board[row][x] === num) {
@@ -129,7 +120,7 @@ function SudokuGame() {
     return true;
   }
 
-  const findEmpty = (board) => {
+  const findEmpty = (board: Board) => {
     const empty = []
     for (let row = 0; row < 9; row++) {
       for (let col = 0; col < 9; col++) {
@@ -143,30 +134,17 @@ function SudokuGame() {
 
   return (
     <Container maxWidth="md">
-      <Typography
-        variant="body1"
-        sx={{
-          textAlign: "center",
-          marginTop: 2.5,
-        }}
-      >
+      <Typography variant="body1" sx={Styles.containerTypography}>
         Solving your sudoku game
       </Typography>
 
-      <Grid container spacing={1} sx={{ backgroundColor: "black", marginTop: 6 }}>
-        {dataList.map((dataPerRow, indexRow) => {
-          return dataPerRow.map((dataPerColom, indexColom) => {
+      <Grid container spacing={1} sx={Styles.gridContainer}>
+        {dataList.map((dataPerRow: number[], indexRow: number) => {
+          return dataPerRow.map((dataPerColom: number, indexColom: number) => {
             const key = `${indexRow}-${indexColom}`;
             return (
               <Grid xs={1.33} md={1.33} key={key}>
-                <Box sx={{
-                  height: 40,
-                  width: '100%',
-                  backgroundColor: "white",
-                  display: "flex",
-                  justifyContent: "center",
-                  alignItems: "center",
-                }}>
+                <Box sx={Styles.boxContent}>
                   <div
                     style={{
                       width: "100%",
@@ -185,7 +163,7 @@ function SudokuGame() {
           });
         })}
       </Grid>
-      <Box sx={{ marginTop: 3, textAlign: 'center' }}>
+      <Box sx={Styles.boxButton}>
         <Button variant="contained" onClick={getAnswer}>Get Answer</Button> &nbsp;
         <Button variant="contained" onClick={() => alert('Still Work In Progress')}>Check</Button>
       </Box>
@@ -196,15 +174,11 @@ function SudokuGame() {
         aria-labelledby="modal-modal-title"
         aria-describedby="modal-modal-description"
       >
-        <Grid container spacing={2} sx={style}>
+        <Grid container spacing={2} sx={Styles.grid}>
           <Grid xs={12}>
             <Typography
               variant="body1"
-              sx={{
-                marginTop: '10px',
-                color: 'white',
-                textAlign: "center",
-              }}
+              sx={Styles.modalTypography}
             >
               Choose your number
             </Typography>
@@ -212,14 +186,7 @@ function SudokuGame() {
 
           {posibilitiesOnModal.map((value => (
             <Grid xs={4} md={1.33} key={value}>
-              <Box sx={{
-                  height: 40,
-                  width: '100%',
-                  backgroundColor: "white",
-                  display: "flex",
-                  justifyContent: "center",
-                  alignItems: "center",
-                }}
+              <Box sx={Styles.boxpossibilities}
                 onClick={() => changeCard(value, coordinate.current[0], coordinate.current[1])}
               >
                 {value}

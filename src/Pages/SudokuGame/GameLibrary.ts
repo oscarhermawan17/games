@@ -1,9 +1,11 @@
-const library = () => {
+import type { Board, LibraryGames } from "./SudokuGameType"
+
+const library = (): Board => {
   const getRandomValue = Math.floor(Math.random() * 5)
   return libraryGames[getRandomValue]
 }
 
-const libraryGames = {
+const libraryGames: LibraryGames = {
   "0": [[5, 3, 0, 0, 7, 0, 0, 0, 0],
     [6, 0, 0, 1, 9, 5, 0, 0, 0],
     [0, 9, 8, 0, 0, 0, 0, 6, 0],
