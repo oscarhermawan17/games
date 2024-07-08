@@ -64,18 +64,20 @@ function SudokuGame() {
   }
 
   function checkGame() {
-    console.log('masuk')
+    alert('This feature still in Progress')
   }
 
   const backTracking = () => {
     const board: Board = [...dataList]
     let posibilitesValue: PosibilitesValue = {}
+    const emptyOnBackTrackingFunc = findEmpty(board)
+    console.log('emptyOnBackTrackingFunc', emptyOnBackTrackingFunc)
     let stepStack: StepStack = []
     let canFix = true
 
     outerLoop: for(let row = 0; row < 9; row++) {
       for(let col = 0; col < 9; col++) {
-        if(emptyPosition.includes(`${row},${col}`)) {
+        if(emptyOnBackTrackingFunc.includes(`${row},${col}`)) {
           if(!posibilitesValue.hasOwnProperty(`${row},${col}`)) {
             posibilitesValue = {
               ...posibilitesValue,
