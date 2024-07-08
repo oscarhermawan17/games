@@ -15,16 +15,16 @@ const styles = {
   },
   gridContainer: {
     backgroundColor: "black",
-    marginTop: 6
+    marginTop: 1
   },
-  boxContent: {
+  boxContent: (emptyCard: boolean) => ({
     height: 40,
     width: '100%',
-    backgroundColor: "white",
+    backgroundColor: emptyCard ? "#F5FFFA" : "#FFFACD",
     display: "flex",
     justifyContent: "center",
     alignItems: "center",
-  },
+  }),
   boxButton: {
     marginTop: '10px',
     color: 'white',

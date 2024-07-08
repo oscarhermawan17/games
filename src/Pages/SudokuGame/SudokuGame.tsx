@@ -1,4 +1,4 @@
-import { useState, useRef } from "react"
+import { useState, useRef, useEffect } from "react"
 import Box from "@mui/material/Box"
 import Button from "@mui/material/Button"
 import Container from "@mui/material/Container"
@@ -12,18 +12,24 @@ import Library, { allZero } from './GameLibrary'
 
 const dataTmp = Library()
 
-
 function SudokuGame() {
   const [dataList, setDataList] = useState<Board>(dataTmp);
   const [openModal, setOpenModal] = useState(false);
   const [posibilitiesOnModal, setPosibilitiesOnModal] = useState<number[]>([]);
+  const [emptyPosition, setEmptyPosition] = useState<string[]>([])
   const coordinate = useRef<[number, number]>([0, 0]);
+
+  useEffect(() => {
+    const empty = findEmpty(dataList);
+    setEmptyPosition([...empty])
+  }, [])
 
   const handleClose = () => setOpenModal(false);
 
   const resetBoard = () => {
     const newBoard = Library();
-    console.log('Resetting board to', newBoard);
+    const empty = findEmpty([...newBoard]);
+    setEmptyPosition([...empty])
     setDataList(newBoard);
   };
 
@@ -34,7 +40,7 @@ function SudokuGame() {
 
   const openFunction = (indexRow: number, indexColom: number) => {
     const setPosibilitiesForModal = findPossibleValues(dataList, indexRow, indexColom)
-    setPosibilitiesOnModal(setPosibilitiesForModal)
+    setPosibilitiesOnModal([0, ...setPosibilitiesForModal])
     coordinate.current = [indexRow, indexColom]
     setOpenModal(true);
   }
@@ -55,16 +61,19 @@ function SudokuGame() {
     }
   }
 
+  function checkGame() {
+    console.log('masuk')
+  }
+
   const backTracking = () => {
     const board: Board = [...dataList]
-    const emptyPositionList = findEmpty(board);
     let posibilitesValue: PosibilitesValue = {}
     let stepStack: StepStack = []
     let canFix = true
 
     outerLoop: for(let row = 0; row < 9; row++) {
       for(let col = 0; col < 9; col++) {
-        if(emptyPositionList.includes(`${row},${col}`)) {
+        if(emptyPosition.includes(`${row},${col}`)) {
           if(!posibilitesValue.hasOwnProperty(`${row},${col}`)) {
             posibilitesValue = {
               ...posibilitesValue,
@@ -149,25 +158,33 @@ function SudokuGame() {
       <Typography variant="body1" sx={Styles.containerTypography}>
         Solving your sudoku game
       </Typography>
-
+      <Box sx={Styles.boxButton}>
+        <Button variant="contained" color="error" onClick={zeroBoard}>Reset to all 0</Button> &nbsp;&nbsp;
+        <Button variant="contained" color="warning" onClick={resetBoard}>Next Board</Button>&nbsp;&nbsp;
+        <Button variant="contained" color="success" onClick={getAnswer}>Get Answer</Button>&nbsp;&nbsp;
+      </Box>
       <Grid container spacing={1} sx={Styles.gridContainer}>
         {dataList.map((dataPerRow: number[], indexRow: number) => {
           return dataPerRow.map((dataPerColom: number, indexColom: number) => {
+            const emptyCard = emptyPosition.includes(`${indexRow},${indexColom}`)
             const key = `${indexRow}-${indexColom}`;
             return (
               <Grid xs={1.33} md={1.33} key={key}>
-                <Box sx={Styles.boxContent}>
+                <Box sx={Styles.boxContent(emptyCard)}>
                   <div
                     style={{
                       width: "100%",
+                      height: "100%",
                       border: 'none',
-                      borderColor: 'transparent',
+                      borderColor: '#ccc',
                       outline: 'none',
-                      textAlign: 'center'
+                      display: 'flex',
+                      alignItems: 'center',
+                      justifyContent: 'center'
                     }}
-                    onClick={() => openFunction(indexRow, indexColom)}
+                    onClick={() => emptyCard ? openFunction(indexRow, indexColom) : null}
                   >
-                    {dataPerColom}
+                    {dataPerColom ? dataPerColom : ""}
                   </div>
                 </Box>
               </Grid>
@@ -176,10 +193,7 @@ function SudokuGame() {
         })}
       </Grid>
       <Box sx={Styles.boxButton}>
-        <Button variant="contained" onClick={zeroBoard}>Zero Board</Button> &nbsp;
-        <Button variant="contained" onClick={getAnswer}>Get Answer</Button> &nbsp;
-        <Button variant="contained" onClick={() => alert('Still Work In Progress')}>Check</Button> &nbsp;
-        <Button variant="contained" onClick={resetBoard}>Change</Button>
+        <Button variant="contained" onClick={checkGame}>Check</Button>
       </Box>
 
       <Modal
@@ -199,14 +213,13 @@ function SudokuGame() {
           </Grid>
 
           {posibilitiesOnModal.map((value => (
-            <Grid xs={4} md={1.33} key={value}>
+            <Grid xs={2.4} key={value}>
               <Box sx={Styles.boxpossibilities}
                 onClick={() => changeCard(value, coordinate.current[0], coordinate.current[1])}
               >
                 {value}
               </Box>
             </Grid>
-            
           )))}
         </Grid>
       </Modal>
