@@ -205,6 +205,7 @@ function SudokuGame() {
         onClose={handleClose}
         aria-labelledby="modal-modal-title"
         aria-describedby="modal-modal-description"
+        sx={Styles.modal}
       >
         <Grid container spacing={2} sx={Styles.grid}>
           <Grid xs={12}>

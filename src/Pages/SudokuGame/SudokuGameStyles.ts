@@ -1,9 +1,5 @@
 const styles = {
   grid: {
-    position: 'absolute',
-    top: '50%',
-    left: '50%',
-    transform: 'translate(-50%, -50%)',
     width: 400,
     bgcolor: 'black',
     border: '2px solid #fff',
@@ -42,7 +38,12 @@ const styles = {
     marginTop: '10px',
     color: 'white',
     textAlign: "center",
-  }
+  },
+  modal: { 
+    display: 'flex',
+    justifyContent: "center",
+    alignItems: "center",
+   }
 }
 
 export default styles
