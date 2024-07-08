@@ -14,12 +14,13 @@ const styles = {
     marginTop: 1
   },
   boxContent: (emptyCard: boolean) => ({
-    height: 40,
+    height: 50,
     width: '100%',
     backgroundColor: emptyCard ? "#F5FFFA" : "#FFFACD",
     display: "flex",
     justifyContent: "center",
     alignItems: "center",
+    border: '2px solid black',
   }),
   boxButton: {
     marginTop: '10px',

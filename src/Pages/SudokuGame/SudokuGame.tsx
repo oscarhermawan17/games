@@ -167,13 +167,20 @@ function SudokuGame() {
         <Button variant="contained" color="warning" onClick={resetBoard}>Next</Button>&nbsp;&nbsp;
         <Button variant="contained" color="success" onClick={getAnswer}>Answer</Button>&nbsp;&nbsp;
       </Box>
-      <Grid container spacing={1} sx={Styles.gridContainer}>
+      <Grid container spacing={0} sx={Styles.gridContainer}>
         {dataList.map((dataPerRow: number[], indexRow: number) => {
           return dataPerRow.map((dataPerColom: number, indexColom: number) => {
             const emptyCard = emptyPosition.includes(`${indexRow},${indexColom}`)
             const key = `${indexRow}-${indexColom}`;
+            const isEndOfRow = (indexColom + 1) % 3 === 0 && indexColom < 8;
+            const isEndOfColumn = (indexRow + 1) % 3 === 0 && indexRow < 8;
             return (
-              <Grid xs={1.33} md={1.33} key={key}>
+              <Grid xs={1.33} md={1.33} key={key} sx={{
+                borderRight: isEndOfRow ? '2px solid black' : '',
+                borderBottom: isEndOfColumn ? '2px solid black' : '',
+                paddingRight: isEndOfRow ? '6px' : '',
+                paddingBottom: isEndOfColumn ? '6px' : ''
+              }}>
                 <Box sx={Styles.boxContent(emptyCard)}>
                   <div
                     style={{
