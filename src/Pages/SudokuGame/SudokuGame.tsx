@@ -159,9 +159,9 @@ function SudokuGame() {
         Solving your sudoku game
       </Typography>
       <Box sx={Styles.boxButton}>
-        <Button variant="contained" color="error" onClick={zeroBoard}>Reset to all 0</Button> &nbsp;&nbsp;
-        <Button variant="contained" color="warning" onClick={resetBoard}>Next Board</Button>&nbsp;&nbsp;
-        <Button variant="contained" color="success" onClick={getAnswer}>Get Answer</Button>&nbsp;&nbsp;
+        <Button variant="contained" color="error" onClick={zeroBoard}>0 Board</Button> &nbsp;&nbsp;
+        <Button variant="contained" color="warning" onClick={resetBoard}>Next</Button>&nbsp;&nbsp;
+        <Button variant="contained" color="success" onClick={getAnswer}>Answer</Button>&nbsp;&nbsp;
       </Box>
       <Grid container spacing={1} sx={Styles.gridContainer}>
         {dataList.map((dataPerRow: number[], indexRow: number) => {
