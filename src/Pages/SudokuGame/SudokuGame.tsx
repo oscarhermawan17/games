@@ -35,7 +35,8 @@ function SudokuGame() {
 
   const zeroBoard = () => {
     const newZeroBoard = allZero()
-    setEmptyPosition([])
+    const empty = findEmpty([...newZeroBoard]);
+    setEmptyPosition([...empty])
     setDataList(newZeroBoard)
   }
 
