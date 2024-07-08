@@ -171,7 +171,8 @@ function GameCard() {
               <p style={{ fontSize: 22 }}>
                 You win with total {totalOpenCard.current} clicks.
               </p>
-              <p>This game is for My Wife (@lestaridewi)</p>
+              <p>This game is for My Wife <a style={{ textDecoration: 'none'}} href='https://www.instagram.com/lestariidewi/'>@lestariidewi</a>
+              </p>
               <Button
                 variant="contained"
                 color="success"
