@@ -2,7 +2,21 @@ import type { Board, LibraryGames } from "./SudokuGameType"
 
 const library = (): Board => {
   const getRandomValue = Math.floor(Math.random() * 5)
-  return libraryGames[getRandomValue]
+  return JSON.parse(JSON.stringify(libraryGames[getRandomValue]))
+}
+
+export const allZero = (): Board => {
+  return JSON.parse(JSON.stringify([
+    [0,0,0,0,0,0,0,0,0],
+    [0,0,0,0,0,0,0,0,0],
+    [0,0,0,0,0,0,0,0,0],
+    [0,0,0,0,0,0,0,0,0],
+    [0,0,0,0,0,0,0,0,0],
+    [0,0,0,0,0,0,0,0,0],
+    [0,0,0,0,0,0,0,0,0],
+    [0,0,0,0,0,0,0,0,0],
+    [0,0,0,0,0,0,0,0,0]
+  ]))
 }
 
 const libraryGames: LibraryGames = {

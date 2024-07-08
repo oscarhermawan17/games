@@ -8,18 +8,29 @@ import Typography from "@mui/material/Typography"
 
 import type { Board, PosibilitesValue, StepStack } from "./SudokuGameType"
 import Styles from './SudokuGameStyles'
-import LibraryGame from './GameLibrary'
+import Library, { allZero } from './GameLibrary'
 
-const dataTmp = LibraryGame()
+const dataTmp = Library()
+
 
 function SudokuGame() {
   const [dataList, setDataList] = useState<Board>(dataTmp);
-  const dataRef = useRef({ dataList: dataTmp, inputRefs: {} });
-  const [openModal, setOpenModal] = useState(false)
-  const [posibilitiesOnModal, setPosibilitiesOnModal] = useState<number[]>([])
-  const coordinate = useRef<[number, number]>([0,0])
+  const [openModal, setOpenModal] = useState(false);
+  const [posibilitiesOnModal, setPosibilitiesOnModal] = useState<number[]>([]);
+  const coordinate = useRef<[number, number]>([0, 0]);
 
   const handleClose = () => setOpenModal(false);
+
+  const resetBoard = () => {
+    const newBoard = Library();
+    console.log('Resetting board to', newBoard);
+    setDataList(newBoard);
+  };
+
+  const zeroBoard = () => {
+    const newZeroBoard = allZero()
+    setDataList(newZeroBoard)
+  }
 
   const openFunction = (indexRow: number, indexColom: number) => {
     const setPosibilitiesForModal = findPossibleValues(dataList, indexRow, indexColom)
@@ -45,7 +56,8 @@ function SudokuGame() {
   }
 
   const backTracking = () => {
-    const emptyPositionList = findEmpty(dataRef.current.dataList);
+    const board: Board = [...dataList]
+    const emptyPositionList = findEmpty(board);
     let posibilitesValue: PosibilitesValue = {}
     let stepStack: StepStack = []
     let canFix = true
@@ -56,10 +68,10 @@ function SudokuGame() {
           if(!posibilitesValue.hasOwnProperty(`${row},${col}`)) {
             posibilitesValue = {
               ...posibilitesValue,
-              [`${row},${col}`]: findPossibleValues(dataRef.current.dataList,row,col)
+              [`${row},${col}`]: findPossibleValues(board,row,col)
             }
           }
-          const valueNow = posibilitesValue[`${row},${col}`].find((nilai: number) => nilai > dataRef.current.dataList[row][col])
+          const valueNow = posibilitesValue[`${row},${col}`].find((nilai: number) => nilai > board[row][col])
 
           if(valueNow === undefined) {
             if(stepStack.length === 0) {
@@ -67,19 +79,19 @@ function SudokuGame() {
               break outerLoop;
             }
             delete posibilitesValue[`${row},${col}`]
-            dataRef.current.dataList[row][col] = 0
+            board[row][col] = 0
             const lastStack = stepStack.length -1
             row = stepStack[lastStack][0]
             col = stepStack[lastStack][1] -1
             stepStack = stepStack.slice(0,-1) as StepStack
           } else {
-            dataRef.current.dataList[row][col] = valueNow
+            board[row][col] = valueNow
             stepStack = [...stepStack, [row, col]] as StepStack
           }
         }
       }
     }
-    return canFix ? dataRef.current.dataList : false
+    return canFix ? [...board] : false
   }
 
   function findPossibleValues(board: Board, row: number, col: number) {
@@ -108,8 +120,8 @@ function SudokuGame() {
     }
 
     // Periksa kotak 3x3
-    let startRow = Math.floor(row / 3) * 3;
-    let startCol = Math.floor(col / 3) * 3;
+    const startRow = Math.floor(row / 3) * 3;
+    const startCol = Math.floor(col / 3) * 3;
     for (let r = 0; r < 3; r++) {
       for (let c = 0; c < 3; c++) {
         if (board[startRow + r][startCol + c] === num) {
@@ -164,8 +176,10 @@ function SudokuGame() {
         })}
       </Grid>
       <Box sx={Styles.boxButton}>
+        <Button variant="contained" onClick={zeroBoard}>Zero Board</Button> &nbsp;
         <Button variant="contained" onClick={getAnswer}>Get Answer</Button> &nbsp;
-        <Button variant="contained" onClick={() => alert('Still Work In Progress')}>Check</Button>
+        <Button variant="contained" onClick={() => alert('Still Work In Progress')}>Check</Button> &nbsp;
+        <Button variant="contained" onClick={resetBoard}>Change</Button>
       </Box>
 
       <Modal
