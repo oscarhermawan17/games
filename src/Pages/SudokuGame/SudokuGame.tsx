@@ -5,6 +5,7 @@ import Container from "@mui/material/Container"
 import Grid from "@mui/system/Unstable_Grid"
 import Modal from '@mui/material/Modal';
 import Typography from "@mui/material/Typography"
+import useMediaQuery from '@mui/material/useMediaQuery';
 
 import type { Board, PosibilitesValue, StepStack } from "./SudokuGameType"
 import Styles from './SudokuGameStyles'
@@ -18,6 +19,9 @@ function SudokuGame() {
   const [posibilitiesOnModal, setPosibilitiesOnModal] = useState<number[]>([]);
   const [emptyPosition, setEmptyPosition] = useState<string[]>([])
   const coordinate = useRef<[number, number]>([0, 0]);
+
+  const isDesktop = useMediaQuery('(min-width:1080px)');
+
 
   useEffect(() => {
     const empty = findEmpty(dataList);
@@ -214,7 +218,7 @@ function SudokuGame() {
         aria-describedby="modal-modal-description"
         sx={Styles.modal}
       >
-        <Grid container spacing={2} sx={Styles.grid}>
+        <Grid container spacing={2} sx={Styles.grid(isDesktop)}>
           <Grid xs={12}>
             <Typography
               variant="body1"

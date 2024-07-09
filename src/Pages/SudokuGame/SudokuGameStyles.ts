@@ -1,10 +1,10 @@
 const styles = {
-  grid: {
-    width: 400,
+  grid: (isDesktop: boolean) => ({
+    width: isDesktop ? '500px' : '90%', 
     bgcolor: 'black',
     border: '2px solid #fff',
     boxShadow: 24,
-  },
+  }),
   containerTypography: {
     textAlign: "center",
     marginTop: 2.5,
@@ -44,6 +44,7 @@ const styles = {
     display: 'flex',
     justifyContent: "center",
     alignItems: "center",
+    width: '100%'
    }
 }
 
